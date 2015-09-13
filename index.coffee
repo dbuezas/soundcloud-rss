@@ -7,7 +7,17 @@ request = require 'request'
 client_id1 = 'b45b1aa10f1ac2941910a7f0d10f8e28'
 client_id2 = 'a3e059563d7fd3372b49b37f00a00bcf'
 app = express()
+server = null
 app.get '/', (req, res) ->
+
+  unless req.query.s?
+    prefix = "http://#{server.address().address}:#{server.address().port}?s=username/"
+    res.send "usage:<br>
+      #{prefix}tracks<br>
+      or<br>
+      #{prefix}favorites"
+    return
+
   res.set 'Content-Type', 'text/xml'
   console.log 'processing: ', "https://api.soundcloud.com/users/#{req.query.s}?client_id=#{client_id1}"
 
@@ -55,5 +65,5 @@ app.get '/', (req, res) ->
 port = process.env.OPENSHIFT_NODEJS_PORT or process.env.PORT or 8080
 ip = process.env.OPENSHIFT_NODEJS_IP or '127.0.0.1'
 
-http.createServer(app).listen port, ip, ->
-  console.log 'Example app listening at http://%s:%s', ip, port
+server = http.createServer(app).listen port, ip, ->
+  console.log "http://#{server.address().address}:#{server.address().port}?s=username/favorites"
