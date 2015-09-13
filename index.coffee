@@ -1,4 +1,5 @@
 express = require 'express'
+http = require 'http'
 fs = require 'fs'
 Podcast = require 'podcast'
 request = require 'request'
@@ -50,10 +51,9 @@ app.get '/', (req, res) ->
         itunesDuration: "#{hours}:#{mins%60}:#{secs%60}"
 
     res.send feed.xml()
-server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
-server = app.listen(server_port, ->
-  host = server.address().address
-  port = server.address().port
-  console.log 'Example app listening at http://%s:%s', host, port
-  return
-)
+
+port = process.env.OPENSHIFT_NODEJS_PORT or process.env.PORT or 8080
+ip = process.env.OPENSHIFT_NODEJS_IP or '127.0.0.1'
+
+http.createServer(app).listen port, ip, ->
+  console.log 'Example app listening at http://%s:%s', ip, port
