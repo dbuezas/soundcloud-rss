@@ -18,7 +18,6 @@ app.get '/', (req, res) ->
       #{prefix}favorites"
     return
 
-  res.set 'Content-Type', 'text/xml'
   console.log 'processing: ', "https://api.soundcloud.com/users/#{req.query.s}?client_id=#{client_id1}"
 
   feed = new Podcast
@@ -29,7 +28,7 @@ app.get '/', (req, res) ->
     url: "http://api.soundcloud.com/users/#{req.query.s}?client_id=#{client_id1}"
     json: yes
   , (err, res1, songs) ->
-    return console.err err if err?
+    return res.send err if err?
     songs.forEach (o) ->
       secs = Math.floor(o.duration / 1000)
       mins = Math.floor(secs / 60)
@@ -59,11 +58,11 @@ app.get '/', (req, res) ->
         itunesAuthor: o.label_name
         itunesSummary: o.description
         itunesDuration: "#{hours}:#{mins%60}:#{secs%60}"
-
+    res.set 'Content-Type', 'text/xml'
     res.send feed.xml()
 
 port = process.env.OPENSHIFT_NODEJS_PORT or process.env.PORT or 8080
 ip = process.env.OPENSHIFT_NODEJS_IP or '127.0.0.1'
 
 server = http.createServer(app).listen port, ip, ->
-  console.log "http://#{server.address().address}:#{server.address().port}?s=username/favorites"
+  console.log "http://#{server.address().address}:#{server.address().port}"
