@@ -37,7 +37,7 @@ app.get '/', (req, res) ->
         title: o.title
         description: "
           <img align='left' hspace='5' src='#{o.artwork_url}'/>
-          |▶#{o.playback_count}|⬇#{o.download_count}|💬#{o.comment_count}|❤#{o.likes_count}|🔁#{o.reposts_count}|\n
+          [▶#{o.playback_count} ⬇#{o.download_count} 💬#{o.comment_count} ❤#{o.likes_count} 🔁#{o.reposts_count}]\n
           #{o.description}
         "
         guid: o.stream_url
