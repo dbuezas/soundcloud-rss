@@ -4,20 +4,27 @@ fs = require 'fs'
 Podcast = require 'podcast'
 request = require 'request'
 
-client_id1 = 'b45b1aa10f1ac2941910a7f0d10f8e28'
+client_id1 = '02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea'
 client_id2 = 'a3e059563d7fd3372b49b37f00a00bcf'
 app = express()
 server = null
 
 app.get ['/', '/rss/'], (req, res) ->
-  prefix = "http://#{server.address().address}:#{server.address().port}/[username]/"
+  prefix = "#{server.address().address}:#{server.address().port}"
+  if process.env.OPENSHIFT_NODEJS_IP?
+    prefix = "#{process.env.OPENSHIFT_NODEJS_IP}:#{process.env.OPENSHIFT_NODEJS_PORT}/"
+  prefix = "http://#{prefix}/rss/[username]/"
+  posfix = '?client_id=[your_client_id(optional)]'
   res.send "usage:<br>
-    #{prefix}tracks<br>
-    #{prefix}favorites<br>
-    #{prefix}playlists/[playlist_name]
+    #{prefix}tracks#{posfix}<br>
+    #{prefix}favorites#{posfix}<br>
+    #{prefix}playlists/[playlist_name]#{posfix}
     "
 
 app.get '/rss/*', (req, res) ->
+  client_id1_replaced = req.query.client_id
+  client_id1_replaced ?= client_id1
+
   try
     route = req.originalUrl.substr 5
     feed = new Podcast
@@ -29,6 +36,9 @@ app.get '/rss/*', (req, res) ->
       json: yes
     , (err, res1, songs) ->
       return res.send err if err?
+      if songs.errors?
+        res.set 'Content-Type', 'text/plain'
+        return res.send JSON.stringify res1, null, 2
       try
         (songs.tracks or songs).forEach (o) ->
           secs = Math.floor(o.duration / 1000)
