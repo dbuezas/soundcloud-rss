@@ -4,8 +4,7 @@ fs = require 'fs'
 Podcast = require 'podcast'
 request = require 'request'
 
-client_id1 = '02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea'
-client_id2 = 'a3e059563d7fd3372b49b37f00a00bcf'
+client_id = '02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea'
 app = express()
 server = null
 
@@ -22,8 +21,8 @@ app.get ['/', '/rss/'], (req, res) ->
     "
 
 app.get '/rss/*', (req, res) ->
-  client_id1_replaced = req.query.client_id
-  client_id1_replaced ?= client_id1
+  client_id_replaced = req.query.client_id
+  client_id_replaced ?= client_id
 
   try
     route = req.originalUrl.substr 5
@@ -32,7 +31,7 @@ app.get '/rss/*', (req, res) ->
       itunesImage:'http://www.jasonmasi.com/sites/default/files/public/images/soundcloud-icon.png'
 
     request
-      url: "http://api.soundcloud.com/users/#{route}?client_id=#{client_id1}"
+      url: "http://api.soundcloud.com/users/#{route}?client_id=#{client_id}"
       json: yes
     , (err, res1, songs) ->
       return res.send err if err?
@@ -56,7 +55,7 @@ app.get '/rss/*', (req, res) ->
             author: o.label_name
             date: o.last_modified
             enclosure:
-              url: o.stream_url + '?client_id=' + client_id2
+              url: o.stream_url + '?client_id=' + client_id
               size: o.original_content_size
               type: 'audio/mpeg'
             itunesImage: o.artwork_url
