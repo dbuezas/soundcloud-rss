@@ -8,30 +8,26 @@ client_id = '02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea'
 app = express()
 server = null
 
-app.get ['/', '/rss/'], (req, res) ->
-  prefix = "#{server.address().address}:#{server.address().port}"
+app.get ['/'], (req, res) ->
+  str = "#{server.address().address}:#{server.address().port}"
+  #https://api.soundcloud.com/resolve?url=https%3A//soundcloud.com/david-buezas/sets/sport&client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea
   if process.env.OPENSHIFT_NODEJS_IP?
-    prefix = "#{process.env.OPENSHIFT_NODEJS_IP}:#{process.env.OPENSHIFT_NODEJS_PORT}/"
-  prefix = "http://#{prefix}/rss/[username]/"
-  posfix = '?client_id=[your_client_id(optional)]'
-  res.send "usage:<br>
-    #{prefix}tracks#{posfix}<br>
-    #{prefix}favorites#{posfix}<br>
-    #{prefix}playlists/[playlist_name]#{posfix}
-    "
+    str = "#{process.env.OPENSHIFT_NODEJS_IP}:#{process.env.OPENSHIFT_NODEJS_PORT}/"
+  str = "http://#{prefix}/rss?url=[soundcloud-url]&client_id=[your_client_id(optional)]"
+  res.send "usage:<br>#{str}"
 
-app.get '/rss/*', (req, res) ->
-  client_id_replaced = req.query.client_id
-  client_id_replaced ?= client_id
-
+app.get '/rss', (req, res) ->
+  unless req.query.url?
+    return res.redirect '/'
   try
-    route = req.originalUrl.substr 5
+    route = req.params[0]
     feed = new Podcast
       title: route
       itunesImage:'http://www.jasonmasi.com/sites/default/files/public/images/soundcloud-icon.png'
-
+    req.query.client_id ?= client_id
     request
-      url: "http://api.soundcloud.com/users/#{route}?client_id=#{client_id}"
+      url: "http://api.soundcloud.com/resolve"
+      qs: req.query
       json: yes
     , (err, res1, songs) ->
       return res.send err if err?
