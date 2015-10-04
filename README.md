@@ -1,9 +1,8 @@
 # soundcloud-rss
-Serves an rss feed from your likes or tracks in soundcloud
+Serves an rss feed from a soundcloud url with downloadable songs!
 
   * example:
     ```
-    http://127.0.0.1:8080/rss/[username]/favorites
-    http://127.0.0.1:8080/rss/[username]/tracks
-    http://127.0.0.1:8080/rss/[username]/playlists/[playlist_name]
+    http://127.0.0.1:8080/rss?url=https://soundcloud.com/media-blackout-label/tracks
+    http://127.0.0.1:8080/rss?url=https://soundcloud.com/media-blackout-label/tracks&client_id=12345678901234567890
     ```
