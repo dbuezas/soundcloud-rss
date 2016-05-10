@@ -20,9 +20,8 @@ app.get '/rss', (req, res) ->
   unless req.query.url?
     return res.redirect '/'
   try
-    route = req.params[0]
     feed = new Podcast
-      title: route
+      title: req.query.url.split('soundcloud.com/')[1]
       itunesImage:'http://www.jasonmasi.com/sites/default/files/public/images/soundcloud-icon.png'
     req.query.client_id ?= client_id
     request
@@ -35,6 +34,7 @@ app.get '/rss', (req, res) ->
         res.set 'Content-Type', 'text/plain'
         return res.send JSON.stringify res1, null, 2
       try
+        return JSON.stringify(songs)
         (songs.tracks or songs).forEach (o) ->
           secs = Math.floor(o.duration / 1000)
           mins = Math.floor(secs / 60)
@@ -54,7 +54,7 @@ app.get '/rss', (req, res) ->
               url: o.stream_url + '?client_id=' + client_id
               size: o.original_content_size
               type: 'audio/mpeg'
-            itunesImage: o.artwork_url
+            itunesImage: o.artwork_url.replace('https://','http://')
             itunesExplicit: no
             itunesAuthor: o.label_name
             itunesSummary: o.description

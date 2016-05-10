@@ -16,7 +16,7 @@
   "dependencies": {
     "coffee-script": "^1.10.0",
     "express": "^4.13.3",
-    "podcast": "^0.2.1",
+    "podcast": "^0.2.2",
     "request": "^2.61.0"
   }
 }
