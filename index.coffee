@@ -34,7 +34,6 @@ app.get '/rss', (req, res) ->
         res.set 'Content-Type', 'text/plain'
         return res.send JSON.stringify res1, null, 2
       try
-        res.set 'Content-Type', 'text/xml'
         return res.send JSON.stringify(songs)
         (songs.tracks or songs).forEach (o) ->
           secs = Math.floor(o.duration / 1000)
