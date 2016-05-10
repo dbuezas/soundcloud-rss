@@ -32,7 +32,7 @@ app.get '/rss', (req, res) ->
         res.set 'Content-Type', 'text/plain'
         return res.send JSON.stringify res1, null, 2
       try
-        r = Math.floor (Math.random() * ((songs.tracks or songs).length))
+        r = (songs.tracks or songs).length - 1
         feed = new Podcast
           title: req.query.url.split('soundcloud.com/')[1]
           itunesImage: (songs.tracks or songs)[r].artwork_url
