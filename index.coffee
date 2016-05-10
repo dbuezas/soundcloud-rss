@@ -53,7 +53,7 @@ app.get '/rss', (req, res) ->
               url: o.stream_url + '?client_id=' + client_id
               size: o.original_content_size
               type: 'audio/mpeg'
-            itunesImage: o.artwork_url.replace('https://','http://')
+            itunesImage: o.artwork_url
             itunesExplicit: no
             itunesAuthor: o.label_name
             itunesSummary: o.description
