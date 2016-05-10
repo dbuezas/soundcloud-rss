@@ -20,9 +20,7 @@ app.get '/rss', (req, res) ->
   unless req.query.url?
     return res.redirect '/'
   try
-    feed = new Podcast
-      title: req.query.url.split('soundcloud.com/')[1]
-      itunesImage:'http://www.jasonmasi.com/sites/default/files/public/images/soundcloud-icon.png'
+
     req.query.client_id ?= client_id
     request
       url: "http://api.soundcloud.com/resolve"
@@ -34,6 +32,10 @@ app.get '/rss', (req, res) ->
         res.set 'Content-Type', 'text/plain'
         return res.send JSON.stringify res1, null, 2
       try
+        r = Math.floor (Math.random() * ((songs.tracks or songs).length)
+        feed = new Podcast
+          title: req.query.url.split('soundcloud.com/')[1]
+          itunesImage: (songs.tracks or songs)[r].artwork_url
         (songs.tracks or songs).forEach (o) ->
           secs = Math.floor(o.duration / 1000)
           mins = Math.floor(secs / 60)
