@@ -4,7 +4,7 @@ fs = require 'fs'
 Podcast = require 'podcast'
 request = require 'request'
 
-client_id = '02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea'
+client_id = 'fDoItMDbsbZz8dY16ZzARCZmzgHBPotA'
 app = express()
 server = null
 
@@ -27,6 +27,7 @@ app.get '/rss', (req, res) ->
       qs: req.query
       json: yes
     , (err, res1, songs) ->
+      console.log arguments
       return res.send err if err?
       if songs.errors?
         res.set 'Content-Type', 'text/plain'
