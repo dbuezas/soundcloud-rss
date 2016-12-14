@@ -46,7 +46,7 @@ app.get '/rss', (req, res) ->
             description: "
               <img align='left' hspace='5' src='#{o.artwork_url}'/>
               [▶#{o.playback_count} ⬇#{o.download_count} 💬#{o.comment_count} ❤#{o.likes_count} 🔁#{o.reposts_count}]\n
-              #{o.description.slice(0,20)}
+              #{o.description?.slice(0,100)}
             "
             guid: o.stream_url
             url: o.permalink_url
