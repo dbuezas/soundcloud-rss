@@ -46,7 +46,7 @@ app.get '/rss', (req, res) ->
             description: "
               <img align='left' hspace='5' src='#{o.artwork_url}'/>
               [▶#{o.playback_count} ⬇#{o.download_count} 💬#{o.comment_count} ❤#{o.likes_count} 🔁#{o.reposts_count}]\n
-              #{o.description}
+              #{o.description.slice(0,20)}
             "
             guid: o.stream_url
             url: o.permalink_url
@@ -59,7 +59,7 @@ app.get '/rss', (req, res) ->
             itunesImage: o.artwork_url
             itunesExplicit: no
             itunesAuthor: o.label_name
-            itunesSummary: o.description
+            itunesSummary: 'o.description'
             itunesDuration: "#{hours}:#{mins%60}:#{secs%60}"
         res.set 'Content-Type', 'text/xml'
         res.send feed.xml()
